@@ -1,6 +1,6 @@
 import datetime
 
-import PersonModel
+from PersonModel import PersonModel
 
 
 class DealModel:
