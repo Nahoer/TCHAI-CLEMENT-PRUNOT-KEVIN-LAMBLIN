@@ -1,7 +1,7 @@
 import sqlite3
 from typing import List
-from model.PersonModel import PersonModel as Person
-from model.DealModel import DealModel as Deal
+from model.PersonModel import PersonModel
+from model.DealModel import DealModel
 class DataBase:
     def __init__(self, path):
         try:
@@ -21,13 +21,13 @@ class DataBase:
             cursor.close()
         except sqlite3.Error as error:
             print("Erreur lors de l'insertion de la personne: ", error)
-    def getPersonList(self)->List[Person]:
+    def getPersonList(self)->List[PersonModel]:
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM Personne")
         rows = cursor.fetchall()
         personList = []
         for row in rows:
-            personList += [Person(row[1], row[2], row[0])]
+            personList += [PersonModel(row[1], row[2], row[0])]
         return personList
 
     def addTransaction(self, id_envoyeur, id_receveur, montant, date):
@@ -44,11 +44,11 @@ class DataBase:
         except sqlite3.Error as error:
             print("Erreur lors de l'insertion de la transaction: ", error)
 
-    def getDealList(self)->List[Deal]:
+    def getDealList(self)->List[DealModel]:
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM Transactions")
         rows = cursor.fetchall()
         dealList = []
         for row in rows:
-            dealList += [Person(row[1], row[2], row[0])]
+            dealList += [PersonModel(row[1], row[2], row[0])]
         return dealList
