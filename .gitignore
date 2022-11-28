@@ -1,3 +1,4 @@
 
 src/__pycache__/database.cpython-310.pyc
 *.pyc
+.idea/
