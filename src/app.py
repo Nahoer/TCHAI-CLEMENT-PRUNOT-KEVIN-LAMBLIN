@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, redirect
 from database import DataBase
 from markupsafe import escape
 
@@ -26,11 +26,10 @@ def addTransaction():
         liste = db.getDealList()
         for deal in liste:
             print(deal)
-
     return message
 
 @app.route('/addPerson')
-def addPersonne():
+def addPersonne():                                  #/addPerson?firstName=<firstname>&lastName=<lastname> sans quote pour ajouter
     db = DataBase("../database/transactions.db")
     first_name = str(request.args.get("firstName"))
     last_name = str(request.args.get("lastName"))
@@ -40,10 +39,16 @@ def addPersonne():
         message += "firstName: id de l'auteur de la transaction\n"
         message += "lastName: personne qui reçoit l'argent de la transaction"
     else:
-        db.addPerson(last_name, first_name)
-        message = "Personne ajoutée"
-        liste = db.getPersonList()
-        for person in liste:
-            print(person)
+        db
+        #db.addPerson(last_name, first_name)
+    return redirect(f"/Persons")
 
+
+@app.route('/Persons')
+def listerPersonnes():
+    db = DataBase("../database/transactions.db")
+    liste = db.getPersonList()
+    message=""
+    for person in liste:
+        message+=str(person)+"<br/>"
     return message
