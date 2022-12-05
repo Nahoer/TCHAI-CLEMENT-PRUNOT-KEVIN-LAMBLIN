@@ -28,7 +28,7 @@ class DataBase:
         rows = cursor.fetchall()
         personList = []
         for row in rows:
-            personList += [PersonModel(row[1], row[0], row[2])]
+            personList += [PersonModel(row[0], row[2], row[1])]
         return personList
 
     def addTransaction(self, id_envoyeur:int, id_receveur:int, montant:int, date:datetime.datetime):
@@ -51,5 +51,5 @@ class DataBase:
         rows = cursor.fetchall()
         dealList = []
         for row in rows:
-            dealList += [PersonModel(row[1], row[2], row[0])]
+            dealList += [DealModel(row[0], row[1], row[2], row[3], row[4])]
         return dealList
