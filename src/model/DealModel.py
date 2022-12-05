@@ -9,3 +9,5 @@ class DealModel:
         self.receiver = receiver
         self.amount = amount
         self.date = date
+    def __str__(self):
+        return self.id+"|"+self.debtor+"|"+"|"+self.receiver+"|"+self.amount+"|"+self.date

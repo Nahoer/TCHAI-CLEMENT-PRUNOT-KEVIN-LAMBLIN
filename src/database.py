@@ -1,3 +1,4 @@
+import datetime
 import sqlite3
 from typing import List
 from model.PersonModel import PersonModel
@@ -27,10 +28,10 @@ class DataBase:
         rows = cursor.fetchall()
         personList = []
         for row in rows:
-            personList += [PersonModel(row[1], row[2], row[0])]
+            personList += [PersonModel(row[1], row[0], row[2])]
         return personList
 
-    def addTransaction(self, id_envoyeur, id_receveur, montant, date):
+    def addTransaction(self, id_envoyeur:int, id_receveur:int, montant:int, date:datetime.datetime):
         try:
             cursor = self.connection.cursor()
             sqlite_insert_query = """INSERT INTO Transactions
