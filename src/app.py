@@ -6,13 +6,15 @@ from markupsafe import escape
 
 app = Flask(__name__)
 
-def checkParams(requestArgs, list:[str]):
-#Vérifie que tous les paramètres de requête passés en paramètre sont dans la liste d'argument de la requête
+
+def checkParams(requestArgs, list: [str]):
+    # Vérifie que tous les paramètres de requête passés en paramètre sont dans la liste d'argument de la requête
     ok = True
     for param in list:
         if not (param in requestArgs):
-            ok=False
+            ok = False
     return ok
+
 
 @app.route('/addTransaction')
 def addTransaction():
@@ -31,17 +33,19 @@ def addTransaction():
         message += "montant: montant de la transaction<br/>"
         return message
 
+
 @app.route('/Transactions')
 def listerTransactions():
     db = DataBase("../database/transactions.db")
     liste = db.getDealList()
-    message=""
+    message = ""
     for deal in liste:
-        message+=str(deal)+"<br/>"
+        message += str(deal) + "<br/>"
     return message
 
+
 @app.route('/addPerson')
-def addPersonne():                                  #/addPerson?firstName=<firstname>&lastName=<lastname> sans quote pour ajouter
+def addPersonne():  # /addPerson?firstName=<firstname>&lastName=<lastname> sans quote pour ajouter
     db = DataBase("../database/transactions.db")
 
     message = "La personne a bien été ajoutée."
@@ -61,11 +65,22 @@ def addPersonne():                                  #/addPerson?firstName=<first
 def listerPersonnes():
     db = DataBase("../database/transactions.db")
     liste = db.getPersonList()
-    message=""
+    message = ""
     for person in liste:
-        message+=str(person)+"<br/>"
+        message += str(person) + "<br/>"
     return message
+
 
 @app.route('/Connexion')
 def connexion():
     return "Connexion OK"
+
+
+@app.route('/TransactionsOrderedByDate')
+def listerTransactionsParDate():
+    db = DataBase("../database/transactions.db")
+    liste = db.getDealListFromDate()
+    message = ""
+    for deal in liste:
+        message += str(deal) + "<br/>"
+    return message
