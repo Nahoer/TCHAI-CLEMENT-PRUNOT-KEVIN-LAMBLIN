@@ -34,7 +34,7 @@ Disponible en version v1.
 
 ## Méthode POST
 
-### url/addTransaction
+### url/addTransaction
 
 Méthode qui permet d'ajouter/créer une nouvelle transaction.  
 Cette méthode nécessite l'identifiant de l'envoyeur et du receveur, respectivement nommé *idEnvoyeur* et *idReceveur* et le montant nommé *montant*.  
