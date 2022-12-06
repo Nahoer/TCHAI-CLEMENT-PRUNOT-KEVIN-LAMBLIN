@@ -52,3 +52,7 @@ def listerPersonnes():
     for person in liste:
         message+=str(person)+"<br/>"
     return message
+
+@app.route('/Connexion')
+def connexion():
+    return "Connexion OK"
