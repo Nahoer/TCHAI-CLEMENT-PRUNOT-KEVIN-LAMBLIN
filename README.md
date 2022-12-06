@@ -32,19 +32,24 @@ Méthode qui permet de récupérer la liste des transactions.
 Cette méthode ne nécessite aucun paramètre.  
 Disponible en version v1.
 
+### url/TransactionsOrderedByDate
+
+Méthode qui permet de récupérer la liste des transactions par ordre chronologique.  
+Cette méthode ne nécessite aucun paramètre.  
+Disponible en version v1.
+
 ## Méthode POST
 
 ### url/addTransaction
 
 Méthode qui permet d'ajouter/créer une nouvelle transaction.  
-Cette méthode nécessite l'identifiant de l'envoyeur et du receveur, respectivement nommé *idEnvoyeur* et *idReceveur* et le montant nommé *montant*.  
-La transaction possède également une date // TODO voir si géré automatiquement  
+Cette méthode nécessite l'identifiant de l'envoyeur et du receveur, respectivement nommé *idSender* et *idReceiver* et le montant nommé *amount*.  
 Disponible en version v1.
 
 ### url/addPerson
 
 Méthode qui permet d'ajouter/créer une nouvelle personne.  
-Cette méthode nécessite le prénom de la personne nommé *first_name* et du nom nommé *last_name*.  
+Cette méthode nécessite le prénom de la personne nommé *firstName* et du nom nommé *lastName*.  
 Disponible en version v1.
 
 
