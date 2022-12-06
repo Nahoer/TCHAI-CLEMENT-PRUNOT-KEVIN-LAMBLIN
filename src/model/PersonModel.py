@@ -6,4 +6,4 @@ class PersonModel:
         self.first_name = first_name
 
     def __str__(self):
-        return "["+str(self.id)+"] "+str(self.first_name)+" "+str(self.last_name)
+        return str(self.id)+" "+str(self.first_name)+" "+str(self.last_name)
