@@ -45,6 +45,18 @@ Méthode qui permet de récupérer la liste des transactions par ordre chronolog
 Cette méthode ne nécessite aucun paramètre.  
 Disponible en version v1.
 
+### url/TransactionsFor
+
+Méthode qui permet de récupérer la liste des transactions par ordre chronologique pour une personne donnée.  
+Cette méthode nécessite l'identifiant de la personne nommé *id*.  
+Disponible en version v1.
+
+### url/getSolde
+
+Méthode qui permet de récupérer le solde de la personne donnée en la calculant depuis la liste des transactions.  
+Cette méthode nécessite l'identifiant de la personne nommé *idPerson*.  
+Disponible en version v1.
+
 ## Méthode POST
 
 ### url/addTransaction
