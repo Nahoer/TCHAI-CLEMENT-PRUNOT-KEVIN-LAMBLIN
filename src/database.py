@@ -67,3 +67,15 @@ class DataBase:
         for row in rows:
             dealList += [DealModel(row[0], row[3], row[4], row[1], row[2])]
         return dealList
+
+    def getDealForUser(self, id: int) -> List[DealModel]:
+        cursor = self.connection.cursor()
+        query = """SELECT * FROM Transactions WHERE '{}' = id_envoyeur OR '{}' = id_receveur ORDER BY date ASC""".format(
+            id,
+            id)
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        dealList = []
+        for row in rows:
+            dealList += [DealModel(row[0], row[3], row[4], row[1], row[2])]
+        return dealList

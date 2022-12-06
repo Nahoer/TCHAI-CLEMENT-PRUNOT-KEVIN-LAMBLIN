@@ -85,6 +85,25 @@ def listerTransactionsParDate():
         message += str(deal) + "<br/>"
     return message
 
+
+@app.route('/TransactionsFor')
+def listerTransactionPour():
+    db = DataBase("../database/transactions.db")
+    id = -1
+    if checkParams(request.args, ['id']):
+        id = int(request.args.get("id"))
+
+    if id >= 0:
+        message = ""
+        liste = db.getDealForUser(id)
+        for deal in liste:
+            message += str(deal) + "<br/>"
+    else:
+        message = "Id invalide"
+
+    return message
+
+
 @app.route('/getSolde')
 def getSolde():
     db = DataBase("../database/transactions.db")
@@ -100,7 +119,7 @@ def getSolde():
         for deal in listeDeal:
             if deal.debtor == id:
                 listeID[id] -= deal.amount
-                print(str(id)+" a payé "+str(deal.amount))
+                print(str(id) + " a payé " + str(deal.amount))
             elif deal.receiver == id:
                 listeID[id] += deal.amount
                 print(str(id) + " a reçu " + str(deal.amount))
