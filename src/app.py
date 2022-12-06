@@ -17,13 +17,13 @@ def checkParams(requestArgs, list:[str]):
 @app.route('/addTransaction')
 def addTransaction():
     db = DataBase("../database/transactions.db")
-    message = ""
+    message = "La transaction a bien été enregistrée."
     if checkParams(request.args, ['idSender', 'idReceiver', 'amount']):
         idEnvoyeur = int(request.args.get("idSender"))
         idReceveur = int(request.args.get("idReceiver"))
         montant = int(request.args.get("amount"))
         db.addTransaction(idEnvoyeur, idReceveur, montant)
-        return redirect(f"/Transactions")
+        return message
     else:
         message = "Veuillez founir les données suivante :<br/>"
         message += "idEnvoyeur: id de l'auteur de la transaction<br/>"
@@ -44,12 +44,12 @@ def listerTransactions():
 def addPersonne():                                  #/addPerson?firstName=<firstname>&lastName=<lastname> sans quote pour ajouter
     db = DataBase("../database/transactions.db")
 
-    message = ""
+    message = "La personne a bien été ajoutée."
     if checkParams(request.args, ['lastName', 'firstName']):
         first_name = str(request.args.get("firstName"))
         last_name = str(request.args.get("lastName"))
         db.addPerson(last_name, first_name)
-        return redirect(f"/Persons")
+        return message
     else:
         message = "Veuillez founir les données suivante :<br/>"
         message += "firstName: id de l'auteur de la transaction<br/>"
