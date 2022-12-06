@@ -31,13 +31,13 @@ class DataBase:
             personList += [PersonModel(row[0], row[2], row[1])]
         return personList
 
-    def addTransaction(self, id_envoyeur:int, id_receveur:int, montant:int, date:datetime.datetime):
+    def addTransaction(self, id_envoyeur:int, id_receveur:int, montant:int):
         try:
             cursor = self.connection.cursor()
             sqlite_insert_query = """INSERT INTO Transactions
                                               (id_envoyeur, id_receveur, montant, date) 
                                                VALUES
-                                              ('{}','{}')""".format(id_envoyeur, id_receveur, montant, date)
+                                              ('{}','{}','{}', '{}')""".format(id_envoyeur, id_receveur, montant, datetime.date.today())
             count = cursor.execute(sqlite_insert_query)
             self.connection.commit()
             print("Record inserted successfully into SqliteDb_developers table ", cursor.rowcount)
@@ -51,5 +51,5 @@ class DataBase:
         rows = cursor.fetchall()
         dealList = []
         for row in rows:
-            dealList += [DealModel(row[0], row[1], row[2], row[3], row[4])]
+            dealList += [DealModel(row[0], row[3], row[4], row[1], row[2])]
         return dealList

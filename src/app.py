@@ -1,3 +1,5 @@
+import datetime
+
 from flask import Flask, request, redirect
 from database import DataBase
 from markupsafe import escape
@@ -5,6 +7,7 @@ from markupsafe import escape
 app = Flask(__name__)
 
 def checkParams(requestArgs, list:[str]):
+#Vérifie que tous les paramètres de requête passés en paramètre sont dans la liste d'argument de la requête
     ok = True
     for param in list:
         if not (param in requestArgs):
@@ -15,20 +18,17 @@ def checkParams(requestArgs, list:[str]):
 def addTransaction():
     db = DataBase("../database/transactions.db")
     message = ""
-    if checkParams(request.args, ['idEnvoyeur', 'idReceveur', 'montant', 'date']):
+    if checkParams(request.args, ['idSender', 'idReceiver', 'amount']):
         idEnvoyeur = int(request.args.get("idSender"))
         idReceveur = int(request.args.get("idReceiver"))
         montant = int(request.args.get("amount"))
-        date = request.args.get("date")
-        db.addTransaction(idEnvoyeur, idReceveur, montant, date)
-        print(str(idEnvoyeur) + " " + str(idReceveur) + " " + str(montant) + " " + date)
+        db.addTransaction(idEnvoyeur, idReceveur, montant)
         return redirect(f"/Transactions")
     else:
         message = "Veuillez founir les données suivante :<br/>"
         message += "idEnvoyeur: id de l'auteur de la transaction<br/>"
         message += "idReceveur: personne qui reçoit l'argent de la transaction<br/>"
         message += "montant: montant de la transaction<br/>"
-        message += "date: date de la transaction"
         return message
 
 @app.route('/Transactions')

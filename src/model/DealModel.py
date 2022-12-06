@@ -10,4 +10,4 @@ class DealModel:
         self.amount = amount
         self.date = date
     def __str__(self):
-        return self.id+"|"+self.debtor+"|"+"|"+self.receiver+"|"+self.amount+"|"+self.date
+        return "["+str(self.id)+"] "+str(self.debtor)+" "+str(self.receiver)+" "+str(self.amount)+" "+str(self.date)
