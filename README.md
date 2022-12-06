@@ -5,6 +5,13 @@ L'objectif de ce projet est de concevoir un système de transactions électroniq
 
 Il faut créer une API qui sera appelé à l'aide de requête HTTP.
 
+## Choix techniques
+
+Pour ce projet, nous n'avons pas effectué de choix techniques particuliers.  
+Nous avons utilisé le technologie recommandé afin de rester au plus proche des choix fais par l'enseignant.  
+Pour le SGBD (Système de Gestion de Base de Données), nous avons choisis SQL Lite 3 car nous le connaissons et qu'il permet de créer facilement notre base de données.  
+De plus, il est simple à utiliser avec Python.
+
 # Requêtes de Tchaî
 
 Dans cette partie, nous allons détailler les différentes fonctionnalités de notre application et qu'elles sont les requêtes pour les utiliser.  
