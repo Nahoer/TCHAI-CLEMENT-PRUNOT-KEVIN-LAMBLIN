@@ -76,7 +76,9 @@ Disponible en version v1.
 Pour l'ensemble des tests, il est possible d'utiliser une base de données de test.  
 Afin d'utiliser cette dernière, il suffit de changer le *path* de notre application.  
 En saisissant *test.db* nous utilisons la base de test et en saisissant *transactions.db*, on utilise la base courante.  
-Il exite également une base vide et une sauvegarde de la base de test.
+Il exite également une base vide et une sauvegarde de la base de test.  
+  
+Pour les tests, il est nécessaire d'avoir un serveur Flask fonctionnel et démarré sur l'adresse -http://127.0.0.1:5000-.
 
 ### Version 1
 
