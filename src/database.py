@@ -1,6 +1,7 @@
 import datetime
 import sqlite3
 from typing import List
+import hashlib
 from model.PersonModel import PersonModel
 from model.DealModel import DealModel
 
@@ -10,8 +11,11 @@ class DataBase:
         try:
             self.connection = sqlite3.Connection(path)
         except sqlite3.Error as error:
-            print("Failed to insert data into sqlite table", error)
+            print("Failed to connect to data base", error)
 
+
+    def fonctionHachage(string:bytes):
+        return hashlib.md5(string)
     def addPerson(self, last_name, first_name):
         try:
             cursor = self.connection.cursor()
@@ -19,7 +23,7 @@ class DataBase:
                                               (last_name, first_name) 
                                                VALUES
                                               ('{}','{}')""".format(last_name, first_name)
-            count = cursor.execute(sqlite_insert_query)
+            cursor.execute(sqlite_insert_query, )
             self.connection.commit()
             print("Record inserted successfully into SqliteDb_developers table ", cursor.rowcount)
             cursor.close()
@@ -35,14 +39,22 @@ class DataBase:
             personList += [PersonModel(row[0], row[2], row[1])]
         return personList
 
-    def addTransaction(self, id_envoyeur: int, id_receveur: int, montant: int):
+    def addTransaction(self, id_envoyeur: int, id_receveur: int, montant: float):
         try:
             cursor = self.connection.cursor()
+            date = datetime.date.today()
+
+            totalstr = str(id_envoyeur)+str(id_receveur)+str(montant)+str(date)
             sqlite_insert_query = """INSERT INTO Transactions
-                                              (id_envoyeur, id_receveur, montant, date) 
+                                              (id_envoyeur, id_receveur, montant, date, hash) 
                                                VALUES
-                                              ('{}','{}','{}', '{}')""".format(id_envoyeur, id_receveur, montant,
-                                                                               datetime.date.today())
+                                              ('{idEnvoyeur}','{idReceveur}','{montant}', '{date}', '{h}')""".format(
+                                                                                                                     idEnvoyeur=id_envoyeur,
+                                                                                                                     idReceveur=id_receveur,
+                                                                                                                     montant=montant,
+                                                                                                                     date=date,
+                                                                                                                     h=DataBase.fonctionHachage(totalstr.encode("utf-8")).hexdigest()
+                                                                                                                     )
             count = cursor.execute(sqlite_insert_query)
             self.connection.commit()
             print("Record inserted successfully into SqliteDb_developers table ", cursor.rowcount)
@@ -56,7 +68,7 @@ class DataBase:
         rows = cursor.fetchall()
         dealList = []
         for row in rows:
-            dealList += [DealModel(row[0], row[3], row[4], row[1], row[2])]
+            dealList += [DealModel(row[0], row[3], row[4], row[1], row[2], row[5])]
         return dealList
 
     def getDealListFromDate(self) -> List[DealModel]:
@@ -65,7 +77,7 @@ class DataBase:
         rows = cursor.fetchall()
         dealList = []
         for row in rows:
-            dealList += [DealModel(row[0], row[3], row[4], row[1], row[2])]
+            dealList += [DealModel(row[0], row[3], row[4], row[1], row[2], row[5])]
         return dealList
 
     def getDealForUser(self, id: int) -> List[DealModel]:
@@ -77,5 +89,5 @@ class DataBase:
         rows = cursor.fetchall()
         dealList = []
         for row in rows:
-            dealList += [DealModel(row[0], row[3], row[4], row[1], row[2])]
+            dealList += [DealModel(row[0], row[3], row[4], row[1], row[2], row[5])]
         return dealList

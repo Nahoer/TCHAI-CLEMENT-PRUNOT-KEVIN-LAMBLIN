@@ -11,5 +11,6 @@ CREATE TABLE Transactions
   montant float NOT NULL,
   date date NOT NULL,
   id_envoyeur integer NOT NULL,
-  id_receveur integer NOT NULL
+  id_receveur integer NOT NULL,
+  hash varchar NOT NULL
 );
