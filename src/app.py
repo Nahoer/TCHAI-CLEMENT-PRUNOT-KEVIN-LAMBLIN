@@ -1,11 +1,11 @@
-import datetime
-
-from flask import Flask, request, redirect
+from flask import Flask, request
 from database import DataBase
-from markupsafe import escape
 
 app = Flask(__name__)
+
+# Variable contenant le chemin à la base de données
 path = "../database/transactions.db"
+
 
 def checkParams(requestArgs, list: [str]):
     # Vérifie que tous les paramètres de requête passés en paramètre sont dans la liste d'argument de la requête
