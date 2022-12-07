@@ -5,7 +5,7 @@ from database import DataBase
 from markupsafe import escape
 
 app = Flask(__name__)
-
+path = "../database/transactions.db"
 
 def checkParams(requestArgs, list: [str]):
     # Vérifie que tous les paramètres de requête passés en paramètre sont dans la liste d'argument de la requête
@@ -18,12 +18,12 @@ def checkParams(requestArgs, list: [str]):
 
 @app.route('/addTransaction')
 def addTransaction():
-    db = DataBase("../database/transactions.db")
+    db = DataBase(path)
     message = "La transaction a bien été enregistrée."
     if checkParams(request.args, ['idSender', 'idReceiver', 'amount']):
         idEnvoyeur = int(request.args.get("idSender"))
         idReceveur = int(request.args.get("idReceiver"))
-        montant = int(request.args.get("amount"))
+        montant = float(request.args.get("amount"))
         db.addTransaction(idEnvoyeur, idReceveur, montant)
         return message
     else:
@@ -34,19 +34,19 @@ def addTransaction():
         return message
 
 
-@app.route('/Transactions')
+@app.route('/transactions')
 def listerTransactions():
-    db = DataBase("../database/transactions.db")
+    db = DataBase(path)
     liste = db.getDealList()
-    message = ""
+    tab = []
     for deal in liste:
-        message += str(deal) + "<br/>"
-    return message
+        tab += [deal.toJSON()]
+    return tab
 
 
 @app.route('/addPerson')
 def addPersonne():  # /addPerson?firstName=<firstname>&lastName=<lastname> sans quote pour ajouter
-    db = DataBase("../database/transactions.db")
+    db = DataBase(path)
 
     message = "La personne a bien été ajoutée."
     if checkParams(request.args, ['lastName', 'firstName']):
@@ -61,34 +61,34 @@ def addPersonne():  # /addPerson?firstName=<firstname>&lastName=<lastname> sans 
         return message
 
 
-@app.route('/Persons')
+@app.route('/persons')
 def listerPersonnes():
-    db = DataBase("../database/transactions.db")
+    db = DataBase(path)
     liste = db.getPersonList()
-    message = ""
+    tab = []
     for person in liste:
-        message += str(person) + "<br/>"
-    return message
+        tab += [person.toJSON()]
+    return tab
 
 
-@app.route('/Connexion')
+@app.route('/connexion')
 def connexion():
     return "Connexion OK"
 
 
-@app.route('/TransactionsOrderedByDate')
+@app.route('/transactionsOrderedByDate')
 def listerTransactionsParDate():
-    db = DataBase("../database/transactions.db")
+    db = DataBase(path)
     liste = db.getDealListFromDate()
-    message = ""
+    tab = []
     for deal in liste:
-        message += str(deal) + "<br/>"
-    return message
+        tab += [deal.toJSON()]
+    return tab
 
 
-@app.route('/TransactionsFor')
+@app.route('/transactionsFor')
 def listerTransactionPour():
-    db = DataBase("../database/transactions.db")
+    db = DataBase(path)
     id = -1
     if checkParams(request.args, ['id']):
         id = int(request.args.get("id"))
@@ -96,17 +96,19 @@ def listerTransactionPour():
     if id >= 0:
         message = ""
         liste = db.getDealForUser(id)
+        tab = []
         for deal in liste:
-            message += str(deal) + "<br/>"
+            tab += [deal.toJSON()]
+        return tab
     else:
-        message = "Id invalide"
+        return "Id invalide"
 
-    return message
+
 
 
 @app.route('/getSolde')
 def getSolde():
-    db = DataBase("../database/transactions.db")
+    db = DataBase(path)
     listeDeal = db.getDealList()
     listePersons = db.getPersonList()
     listeID = {}
@@ -123,4 +125,15 @@ def getSolde():
             elif deal.receiver == id:
                 listeID[id] += deal.amount
                 print(str(id) + " a reçu " + str(deal.amount))
-    return str(listeID)
+    return listeID
+
+@app.route("/verifyIntegrity")
+def verifyIntegrity():
+    db = DataBase(path)
+    deals = db.getDealList()
+    wrong = []
+    for deal in deals:
+        totalstr = str(deal.debtor)+str(deal.receiver)+str(deal.amount)+str(deal.date)
+        if(str(DataBase.fonctionHachage(totalstr.encode("utf-8")).hexdigest()) != deal.h):
+            wrong += [deal.id]
+    return wrong
