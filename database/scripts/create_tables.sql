@@ -1,16 +1,15 @@
 Create table Personne
 (
-  id integer,
-  last_name varchar,
-  first_name varchar
+  id integer PRIMARY KEY,
+  last_name varchar NOT NULL,
+  first_name varchar NOT NULL
 );
 
 CREATE TABLE Transactions
 (
-  id integer,
-  montant float,
-  date date,
-  id_envoyeur integer,
-  id_receveur integer,
-  hash varchar
+  id integer PRIMARY KEY,
+  montant float NOT NULL,
+  date date NOT NULL,
+  id_envoyeur integer NOT NULL,
+  id_receveur integer NOT NULL
 );
