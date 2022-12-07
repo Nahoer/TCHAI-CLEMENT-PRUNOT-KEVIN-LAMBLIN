@@ -1,10 +1,10 @@
-import datetime
-
-from flask import Flask, request, redirect
+from flask import Flask, request
 from database import DataBase
-from markupsafe import escape
 
 app = Flask(__name__)
+
+# Variable contenant le chemin à la base de données
+path = "../database/transactions.db"
 
 
 def checkParams(requestArgs, list: [str]):
@@ -18,7 +18,7 @@ def checkParams(requestArgs, list: [str]):
 
 @app.route('/addTransaction')
 def addTransaction():
-    db = DataBase("../database/transactions.db")
+    db = DataBase(path)
     message = "La transaction a bien été enregistrée."
     if checkParams(request.args, ['idSender', 'idReceiver', 'amount']):
         idEnvoyeur = int(request.args.get("idSender"))
@@ -36,7 +36,7 @@ def addTransaction():
 
 @app.route('/Transactions')
 def listerTransactions():
-    db = DataBase("../database/transactions.db")
+    db = DataBase(path)
     liste = db.getDealList()
     message = ""
     for deal in liste:
@@ -46,7 +46,7 @@ def listerTransactions():
 
 @app.route('/addPerson')
 def addPersonne():  # /addPerson?firstName=<firstname>&lastName=<lastname> sans quote pour ajouter
-    db = DataBase("../database/transactions.db")
+    db = DataBase(path)
 
     message = "La personne a bien été ajoutée."
     if checkParams(request.args, ['lastName', 'firstName']):
@@ -63,7 +63,7 @@ def addPersonne():  # /addPerson?firstName=<firstname>&lastName=<lastname> sans 
 
 @app.route('/Persons')
 def listerPersonnes():
-    db = DataBase("../database/transactions.db")
+    db = DataBase(path)
     liste = db.getPersonList()
     message = ""
     for person in liste:
@@ -78,7 +78,7 @@ def connexion():
 
 @app.route('/TransactionsOrderedByDate')
 def listerTransactionsParDate():
-    db = DataBase("../database/transactions.db")
+    db = DataBase(path)
     liste = db.getDealListFromDate()
     message = ""
     for deal in liste:
@@ -88,7 +88,7 @@ def listerTransactionsParDate():
 
 @app.route('/TransactionsFor')
 def listerTransactionPour():
-    db = DataBase("../database/transactions.db")
+    db = DataBase(path)
     id = -1
     if checkParams(request.args, ['id']):
         id = int(request.args.get("id"))
@@ -106,7 +106,7 @@ def listerTransactionPour():
 
 @app.route('/getSolde')
 def getSolde():
-    db = DataBase("../database/transactions.db")
+    db = DataBase(path)
     listeDeal = db.getDealList()
     listePersons = db.getPersonList()
     listeID = {}
