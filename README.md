@@ -45,7 +45,7 @@ Méthode qui permet de récupérer la liste des transactions par ordre chronolog
 Cette méthode ne nécessite aucun paramètre.  
 Disponible en version v1.
 
-### url/TransactionsFor
+### url/TransactionsFor
 
 Méthode qui permet de récupérer la liste des transactions par ordre chronologique pour une personne donnée.  
 Cette méthode nécessite l'identifiant de la personne nommé *id*.  
@@ -71,6 +71,16 @@ Méthode qui permet d'ajouter/créer une nouvelle personne.
 Cette méthode nécessite le prénom de la personne nommé *firstName* et du nom nommé *lastName*.  
 Disponible en version v1.
 
+## Tests
+
+Pour l'ensemble des tests, il est possible d'utiliser une base de données de test.  
+Afin d'utiliser cette dernière, il suffit de changer le *path* de notre application.  
+En saisissant *test.db* nous utilisons la base de test et en saisissant *transactions.db*, on utilise la base courante.  
+Il exite également une base vide et une sauvegarde de la base de test.
+
+### Version 1
+
+Pour la version 1, nous avons réalisé un script de test qui nommé *testv1.py* qui permet de faire l'ensemble des appels à l'API qui permet de visualiser le fonctionnement des différentes fonctionnalités. 
 
 # Auteurs
 Clément PRUNOT  
