@@ -1,0 +1,4 @@
+{
+	"retail":"../database/transactions.db",
+	"test":"../database/test.db"
+}
