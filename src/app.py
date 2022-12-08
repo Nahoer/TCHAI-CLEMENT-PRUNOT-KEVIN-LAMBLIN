@@ -109,7 +109,7 @@ def connexion():
     return "Connexion OK"
 
 
-@app.route('/transactions/<idPerson>')
+@app.route('/transactions/person/<idPerson>')
 def listerTransactionPour(idPerson):
     path = getPath()
     db = DataBase(path)
