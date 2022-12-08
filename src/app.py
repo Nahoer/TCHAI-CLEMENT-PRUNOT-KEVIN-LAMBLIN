@@ -76,7 +76,7 @@ def connexion():
     return "Connexion OK"
 
 
-@app.route('/transactionsOrderedByDate')
+@app.route('/transactions/date')
 def listerTransactionsParDate():
     db = DataBase(path)
     liste = db.getDealListFromDate()
@@ -86,12 +86,10 @@ def listerTransactionsParDate():
     return tab
 
 
-@app.route('/transactionsFor')
-def listerTransactionPour():
+@app.route('/transactions/<idPerson>')
+def listerTransactionPour(idPerson):
     db = DataBase(path)
-    id = -1
-    if checkParams(request.args, ['id']):
-        id = int(request.args.get("id"))
+    id = int(idPerson)
 
     if id >= 0:
         message = ""
@@ -106,25 +104,32 @@ def listerTransactionPour():
 
 
 
-@app.route('/getSolde')
-def getSolde():
+@app.route('/getSolde/<idPerson>') #Obtenir le solde d'une personne spécifique
+def getSoldeOf(idPerson):
+    listeID = {}
+    listeID[int(idPerson)] = 0
+    return calculSolde(listeID)
+
+@app.route('/getSolde') #Obtenir le solde de tout le monde
+def getSoldes():
     db = DataBase(path)
     listeDeal = db.getDealList()
     listePersons = db.getPersonList()
     listeID = {}
-    if checkParams(request.args, ['idPerson']):
-        listeID[int(request.args["idPerson"])] = 0
-    else:
-        for person in listePersons:
-            listeID[person.id] = 0
+    for person in listePersons:
+        listeID[person.id] = 0
+    return calculSolde(listeID)
+def calculSolde(listeID:dict): #Fonction générique pour calculer le solde
+    db = DataBase(path)
+    listeDeal = db.getDealList()
     for id in listeID:
+        print(id)
+        print(type(id))
         for deal in listeDeal:
             if deal.debtor == id:
                 listeID[id] -= deal.amount
-                print(str(id) + " a payé " + str(deal.amount))
             elif deal.receiver == id:
                 listeID[id] += deal.amount
-                print(str(id) + " a reçu " + str(deal.amount))
     return listeID
 
 @app.route("/verifyIntegrity")
