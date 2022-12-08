@@ -6,7 +6,6 @@ from markupsafe import escape
 import json
 
 app = Flask(__name__)
-path = "../database/transactions.db"
 def getPath():
     config = json.load(open("../utils/config.json"))
     database = json.load(open("../utils/databases.json"))
