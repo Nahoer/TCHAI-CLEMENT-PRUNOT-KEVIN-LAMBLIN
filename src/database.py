@@ -19,7 +19,7 @@ class DataBase:
         rows = cursor.fetchall()
         personList = []
         for row in rows:
-            personList += [PersonModel(row[0], row[2], row[1])]
+            personList += [PersonModel(row[0], row[1], row[2])]
         return personList
 
     def getDeal(self, id:int):
