@@ -1,3 +1,3 @@
-import os
+
 if __name__ == '__main__':
-    os.system("flask run")
+    print("Hello world")

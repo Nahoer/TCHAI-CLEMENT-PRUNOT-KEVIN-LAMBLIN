@@ -7,10 +7,3 @@ class PersonModel:
 
     def __str__(self):
         return str(self.id)+" "+str(self.first_name)+" "+str(self.last_name)
-
-    def toJSON(self):
-        JSON = {}
-        JSON["id"] = self.id
-        JSON["firstName"] = self.first_name
-        JSON["lastName"] = self.last_name
-        return JSON

@@ -4,7 +4,8 @@ from database import DataBase
 app = Flask(__name__)
 
 # Variable contenant le chemin à la base de données
-path = "../database/test.db"
+path = "../database/transactions.db"
+
 
 def checkParams(requestArgs, list: [str]):
     # Vérifie que tous les paramètres de requête passés en paramètre sont dans la liste d'argument de la requête
@@ -15,14 +16,14 @@ def checkParams(requestArgs, list: [str]):
     return ok
 
 
-@app.route('/transactions/add')
+@app.route('/addTransaction')
 def addTransaction():
     db = DataBase(path)
     message = "La transaction a bien été enregistrée."
     if checkParams(request.args, ['idSender', 'idReceiver', 'amount']):
         idEnvoyeur = int(request.args.get("idSender"))
         idReceveur = int(request.args.get("idReceiver"))
-        montant = float(request.args.get("amount"))
+        montant = int(request.args.get("amount"))
         db.addTransaction(idEnvoyeur, idReceveur, montant)
         return message
     else:
@@ -33,26 +34,18 @@ def addTransaction():
         return message
 
 
-@app.route('/transactions')
+@app.route('/Transactions')
 def listerTransactions():
     db = DataBase(path)
     liste = db.getDealList()
-    tab = []
+    message = ""
     for deal in liste:
-        tab += [deal.toJSON()]
-    return tab
+        message += str(deal) + "<br/>"
+    return message
 
-@app.route('/transactions/<idTransaction>')
-def getTransaction(idTransaction):
-    db = DataBase(path)
-    liste = db.getDeal(int(idTransaction))
-    tab = []
-    for deal in liste:
-        tab += [deal.toJSON()]
-    return tab
 
-@app.route('/persons/add')
-def addPersonne():  # /persons/add?firstName=<firstname>&lastName=<lastname> sans quote pour ajouter
+@app.route('/addPerson')
+def addPersonne():  # /addPerson?firstName=<firstname>&lastName=<lastname> sans quote pour ajouter
     db = DataBase(path)
 
     message = "La personne a bien été ajoutée."
@@ -67,88 +60,67 @@ def addPersonne():  # /persons/add?firstName=<firstname>&lastName=<lastname> san
         message += "lastName: personne qui reçoit l'argent de la transaction"
         return message
 
-@app.route('/transactions/date')
-def listerTransactionsParDate():
-    db = DataBase(path)
-    liste = db.getDealListFromDate()
-    tab = []
-    for deal in liste:
-        tab += [deal.toJSON()]
-    return tab
 
-@app.route('/persons')
+@app.route('/Persons')
 def listerPersonnes():
     db = DataBase(path)
     liste = db.getPersonList()
-    tab = []
+    message = ""
     for person in liste:
-        tab += [person.toJSON()]
-    return tab
-@app.route('/persons/<idPerson>')
-def getPerson(idPerson):
-    db = DataBase(path)
-    liste = db.getPerson(int(idPerson))
-    tab = []
-    for person in liste:
-        tab += [person.toJSON()]
-    return tab
+        message += str(person) + "<br/>"
+    return message
 
-@app.route('/connexion')
+
+@app.route('/Connexion')
 def connexion():
     return "Connexion OK"
 
 
-@app.route('/transactions/<idPerson>')
-def listerTransactionPour(idPerson):
+@app.route('/TransactionsOrderedByDate')
+def listerTransactionsParDate():
     db = DataBase(path)
-    id = int(idPerson)
+    liste = db.getDealListFromDate()
+    message = ""
+    for deal in liste:
+        message += str(deal) + "<br/>"
+    return message
+
+
+@app.route('/TransactionsFor')
+def listerTransactionPour():
+    db = DataBase(path)
+    id = -1
+    if checkParams(request.args, ['id']):
+        id = int(request.args.get("id"))
 
     if id >= 0:
         message = ""
         liste = db.getDealForUser(id)
-        tab = []
         for deal in liste:
-            tab += [deal.toJSON()]
-        return tab
+            message += str(deal) + "<br/>"
     else:
-        return "Id invalide"
+        message = "Id invalide"
 
-@app.route('/getSolde/<idPerson>') #Obtenir le solde d'une personne spécifique
-def getSoldeOf(idPerson):
-    listeID = {}
-    listeID[int(idPerson)] = 0
-    return calculSolde(listeID)
+    return message
 
-@app.route('/getSolde') #Obtenir le solde de tout le monde
-def getSoldes():
+
+@app.route('/getSolde')
+def getSolde():
     db = DataBase(path)
     listeDeal = db.getDealList()
     listePersons = db.getPersonList()
     listeID = {}
-    for person in listePersons:
-        listeID[person.id] = 0
-    return calculSolde(listeID)
-def calculSolde(listeID:dict): #Fonction générique pour calculer le solde
-    db = DataBase(path)
-    listeDeal = db.getDealList()
+    if checkParams(request.args, ['idPerson']):
+        listeID[int(request.args["idPerson"])] = 0
+    else:
+        for person in listePersons:
+            listeID[person.id] = 0
     for id in listeID:
         for deal in listeDeal:
             if deal.debtor == id:
                 listeID[id] -= deal.amount
+                print(str(id) + " a payé " + str(deal.amount))
             elif deal.receiver == id:
                 listeID[id] += deal.amount
-    return listeID
-
-@app.route("/verifyIntegrity")
-def verifyIntegrity():
-    db = DataBase(path)
-    deals = db.getDealList()
-    wrong = []
-    for i in range(len(deals)):
-        totalstr = str(deals[i].debtor)+str(deals[i].receiver)+str(deals[i].amount)+str(deals[i].date)
-        if i > 0:
-            totalstr+=deals[i-1].h
-        hashAttendu = str(DataBase.fonctionHachage(totalstr.encode("utf-8")).hexdigest())
-        if hashAttendu != deals[i].h:
-            wrong += [deals[i].id]
-    return wrong
+                print(str(id) + " a reçu " + str(deal.amount))
+    return str(listeID)
