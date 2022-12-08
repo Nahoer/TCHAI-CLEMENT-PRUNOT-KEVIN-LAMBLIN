@@ -13,7 +13,23 @@ class DataBase:
         except sqlite3.Error as error:
             print("Failed to connect to data base", error)
 
+    def getPerson(self, id:int):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM Personne WHERE id={id}".format(id=id))
+        rows = cursor.fetchall()
+        personList = []
+        for row in rows:
+            personList += [PersonModel(row[0], row[2], row[1])]
+        return personList
 
+    def getDeal(self, id:int):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM Transactions where id={id}".format(id=id))
+        rows = cursor.fetchall()
+        dealList = []
+        for row in rows:
+            dealList += [DealModel(row[0], row[3], row[4], row[1], row[2], row[5])]
+        return dealList
     def fonctionHachage(string:bytes):
         return hashlib.md5(string)
     def addPerson(self, last_name, first_name):
