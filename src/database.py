@@ -43,24 +43,30 @@ class DataBase:
         try:
             cursor = self.connection.cursor()
             date = datetime.date.today()
-
             totalstr = str(id_envoyeur)+str(id_receveur)+str(montant)+str(date)
+            dealList = self.getDealList()
+            if len(dealList)!=0:
+                totalstr += dealList[len(dealList)-1].h
+            h = DataBase.fonctionHachage(totalstr.encode("utf-8")).hexdigest()
             sqlite_insert_query = """INSERT INTO Transactions
                                               (id_envoyeur, id_receveur, montant, date, hash) 
                                                VALUES
-                                              ('{idEnvoyeur}','{idReceveur}','{montant}', '{date}', '{h}')""".format(
-                                                                                                                     idEnvoyeur=id_envoyeur,
-                                                                                                                     idReceveur=id_receveur,
-                                                                                                                     montant=montant,
-                                                                                                                     date=date,
-                                                                                                                     h=DataBase.fonctionHachage(totalstr.encode("utf-8")).hexdigest()
-                                                                                                                     )
+                                              ('{idEnvoyeur}','{idReceveur}','{montant}', '{date}', '{h}')
+                                              """.format(
+                                                         idEnvoyeur=id_envoyeur,
+                                                         idReceveur=id_receveur,
+                                                         montant=montant,
+                                                         date=date,
+                                                         h=h
+                                                         )
             count = cursor.execute(sqlite_insert_query)
             self.connection.commit()
             print("Record inserted successfully into SqliteDb_developers table ", cursor.rowcount)
             cursor.close()
         except sqlite3.Error as error:
             print("Erreur lors de l'insertion de la transaction: ", error)
+
+
 
     def getDealList(self) -> List[DealModel]:
         cursor = self.connection.cursor()

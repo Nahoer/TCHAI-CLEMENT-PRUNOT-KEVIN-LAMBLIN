@@ -121,10 +121,8 @@ def getSolde():
         for deal in listeDeal:
             if deal.debtor == id:
                 listeID[id] -= deal.amount
-                print(str(id) + " a payé " + str(deal.amount))
             elif deal.receiver == id:
                 listeID[id] += deal.amount
-                print(str(id) + " a reçu " + str(deal.amount))
     return listeID
 
 @app.route("/verifyIntegrity")
@@ -132,8 +130,12 @@ def verifyIntegrity():
     db = DataBase(path)
     deals = db.getDealList()
     wrong = []
-    for deal in deals:
-        totalstr = str(deal.debtor)+str(deal.receiver)+str(deal.amount)+str(deal.date)
-        if(str(DataBase.fonctionHachage(totalstr.encode("utf-8")).hexdigest()) != deal.h):
-            wrong += [deal.id]
+    for i in range(len(deals)):
+        totalstr = str(deals[i].debtor)+str(deals[i].receiver)+str(deals[i].amount)+str(deals[i].date)
+        if i > 0:
+            totalstr+=deals[i-1].h
+        hashAttendu = str(DataBase.fonctionHachage(totalstr.encode("utf-8")).hexdigest())
+        print(totalstr)
+        if hashAttendu != deals[i].h:
+            wrong += [deals[i].id]
     return wrong
