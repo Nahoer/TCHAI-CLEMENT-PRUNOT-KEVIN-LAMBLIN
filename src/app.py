@@ -35,29 +35,28 @@ def addTransaction():
         montant = float(request.args.get("amount"))
 
         public_key = RSA.import_key(db.getPerson(int(idEnvoyeur)).public_key)
-        private_key = ""
-        for i in range(len(request.args.get("privateKey"))):
-            if request.args.get("privateKey")[i] == " " and i>31 and i < len(request.args.get("privateKey"))-30:
+        private_key = "-----BEGIN RSA PRIVATE KEY-----\nMIICXAIBAAKBgQCGM3CeLKg2DtWh0qVXSnLndrH9frPMeUAELuSF61XNlOQq/TRo\nGe1lNVYoNUE03dUqV/Yf92j+Wzcp7hu6IPGNE70/fthQm5KiBVgMUhgDDw4uRmRO\n9gBV2H0FsHanzTduaqkT7mObVdE/WBnYJEd48wAzAxRZdylpR2lqNCbgMwIDAQAB\nAoGACXh93RvHrzDy0J29/2AIpd8RhpM3exmfc+wfQnguMPjt9T6zQRl7UGYoM2Q2\nutVg4sEcZHsgVLr5NKNSH5uNkE4HAE6dmgSfEdb50jSwFCQa954IMomhYzxsjrcs\nLtM8mimBzAOlFgEiGf9nyjmJYp3/a/cFV1vG4mtFx14FYVkCQQC2J0eJBvmiDrta\nzpL6Zc/kIoEfXXNJ0vNYpEAfpH7qTh+LSzAyHOBeQ+Fj07WRthAAj6okbbDNnCAD\nvslCVsdFAkEAvJtuC73ug6rXxi0VIOHsFho+AckcHG8YHhuStncphwEkd6P9q7h/\nLOexc4nZqB8LqKdx/DESUk4CPWafLzYlFwJAL+2N6QQo0vdFXNNV4QTA+qoJh5Mz\nLo2O8hflt2205zm/Gwuhls36S1NZDsc50ykwdLVYc1VZXABkfBfLJOVocQJBAI+6\nxw8Nq7ENRagRfRN096wUTYKg1tpYUwHGs3R3tN7cIQVHpK3zSH9ZBaLtvz/egM0C\n5dtxLewo5I4UIWUiFvsCQB3tzW4+x5m4QCbfriPq6+sgMJ3CXAmUvRPrdprSbLMc\n+aICAcEkBOPLvnI6DRc9UiHfy+lGnbNEnze8PE83bnw=\n-----END RSA PRIVATE KEY-----"
+        param_private_key = request.args.get("privateKey")
+        """for i in range(len(param_private_key)):
+            if param_private_key[i] == " " and i>31 and i < len(param_private_key)-30:
                 private_key+="+"
             else:
-                private_key+= request.args.get("privateKey")[i]
-        print(private_key.encode("utf-8").decode("utf-8"))
-        print(db.getPerson(int(idEnvoyeur)).public_key)
-        private_key = RSA.import_key(private_key)
-
-
-
+                private_key+= param_private_key[i]"""
+        """print(len(private_key))
+        print(private_key)
+        print(db.getPerson(int(idEnvoyeur)).public_key)"""
+        private_key = RSA.import_key(private_key) #crash
 
         date = datetime.date.today()
         deal_list = db.getDealList()
 
         last_hash = deal_list[len(deal_list)-1].h
-        totalstr = idEnvoyeur+idReceveur+montant+str(date)+str(last_hash)
+        totalstr = str(idEnvoyeur)+str(idReceveur)+str(montant)+str(date)+str(last_hash)
 
         current_hash = fonctionHachage(totalstr.encode("utf-8")).hexdigest()
-        crypted_hash = Asymetric_Crypto(current_hash, public_key, "md5")
-        crypted_hash.encrypt()
-        if crypted_hash.verify_signature(private_key):
+        crypteur = Asymetric_Crypto(current_hash, public_key, "md5")
+        crypteur.encrypt()
+        if crypteur.verify_signature(private_key):
             #db.addTransaction(idEnvoyeur, idReceveur, montant, date, current_hash)
             message = "transaction ajoutée"
         else:
