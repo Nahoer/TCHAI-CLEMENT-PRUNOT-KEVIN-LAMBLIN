@@ -1,4 +1,1 @@
-{
-	"database":"retail",
-	"keys":"../utils/keys.json"
-}
+{"database": "test", "keys": "../utils/keys.json"}
