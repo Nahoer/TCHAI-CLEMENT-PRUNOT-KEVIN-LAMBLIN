@@ -115,6 +115,13 @@ Il existe également une base vide et une sauvegarde de la base de test.
 Pour la version 1, nous avons réalisé un script de test qui nommé *testv1.py* qui permet de faire l'ensemble des appels
 à l'API qui permet de visualiser le fonctionnement des différentes fonctionnalités.
 
+### Version 2
+
+Pour la version 2, nous avons réalisé un script de test qui nommé *testv2.py* qui appel le script de la première
+version.  
+Ensuite nous appelons l'attaque de la version 1 et verifions l'intégrité. Nous remarquons que cette fois,
+l'erreur est détectée.
+
 ## Attaques
 
 Pour l'ensemble des versions, nous avons réalisé des attaques. La démarche de chaque attaque sera détaillée ci-dessous.
@@ -122,9 +129,18 @@ Pour l'ensemble des versions, nous avons réalisé des attaques. La démarche de
 ### Version 1
 
 Pour la première version, nous devions réaliser une attaque qui modifie les données dans la base de données. Vous
-trouverez le script nommé *attackv1*.  
+trouverez le script nommé *attackv1.py*.  
 Ce dernier va afficher la liste des transactions, modifier le montant de l'une d'entre elle et afficher à nouveau les
 transactions.  
+Nous remarquerons alors que les données ont bien été modifiées.
+
+### Version 2
+
+Pour la seconde version, nous devions réaliser une attaque qui supprime une transaction dans la base de données. Vous
+trouverez le script nommé *attackv2.py*.  
+Ce dernier va afficher la liste des transactions et des integrités, supprimer l'une d'entre elle et afficher à nouveau
+les
+transactions et des integrités.  
 Nous remarquerons alors que les données ont bien été modifiées.
 
 # Auteurs
