@@ -2,8 +2,6 @@ import testv1
 import requests
 import json
 
-
-
 # We call the first test sample
 
 base_url = "http://127.0.0.1:5000"
