@@ -13,6 +13,10 @@ Pour le SGBD (Système de Gestion de Base de Données), nous avons choisi SQLite
 de créer facilement notre base de données.  
 De plus, il est simple à utiliser avec Python.
 
+Pour le choix de la fonction de hachage, nous avons choisi sha224. Cette fonction de hachage fait partie de la famille
+SHA2, cette famille de fonction de hachage est très fiable, car elle a été développée par la NSA.  
+Ces fonctions sont à ce jour toujours considérées comme très fiable.
+
 # Requêtes de Tchaî
 
 Dans cette partie, nous allons détailler les différentes fonctionnalités de notre application et qu'elles sont les
@@ -74,6 +78,13 @@ Disponible en version v1.
 Méthode qui permet de récupérer le solde de la personne donnée en la calculant depuis la liste des transactions.  
 Cette méthode nécessite l'identifiant de la personne nommé.  
 Disponible en version v1.
+
+### url/verifyIntegrity
+
+Méthode qui permet de vérifier l'intégrité des données dans la base. Cette méthode nous renvoi la liste des transactions
+dont le hash ne correspond pas aux données  
+Cette méthode ne nécessite aucun paramètre.  
+Disponible en version v2.
 
 ## Méthode POST
 
