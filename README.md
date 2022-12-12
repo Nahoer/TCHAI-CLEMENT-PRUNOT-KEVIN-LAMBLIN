@@ -100,7 +100,7 @@ Disponible en version v1.
 
 Méthode qui permet d'ajouter/créer une nouvelle personne.  
 Cette méthode nécessite le prénom de la personne nommé *firstName* et du nom nommé *lastName*.  
-Exemple : url/persons/add?lastName="Dupont&firstName=Jean
+Exemple : url/persons/add?lastName=Dupont&firstName=Jean
 Disponible en version v1.
 
 ## Tests

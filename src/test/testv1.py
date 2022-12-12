@@ -8,6 +8,7 @@ with open('../../utils/config.json', 'r') as openfile:
 with open('../../utils/config.json', 'w') as openfile:
     json_object["database"] = "test"
     json.dump(json_object, openfile)
+
 # Make a connexion test with the flask server
 r = requests.get(base_url + "/connexion")
 
@@ -21,7 +22,7 @@ if r.text == "Connexion OK":
     print(r.text)
     print()
 
-    #getSolde of 1
+    # getSolde of 1
     print("Solde de 1:")
     r = requests.get(base_url + "/getSolde/1")
     print(r.text)
