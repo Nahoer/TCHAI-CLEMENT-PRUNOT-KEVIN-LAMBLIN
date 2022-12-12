@@ -6,10 +6,13 @@ from markupsafe import escape
 import json
 
 app = Flask(__name__)
+
+
 def getPath():
     config = json.load(open("../utils/config.json"))
     database = json.load(open("../utils/databases.json"))
     return database[config["database"]]
+
 
 def checkParams(requestArgs, list: [str]):
     # Vérifie que tous les paramètres de requête passés en paramètre sont dans la liste d'argument de la requête
@@ -49,6 +52,7 @@ def listerTransactions():
         tab += [deal.toJSON()]
     return tab
 
+
 @app.route('/transactions/<idTransaction>')
 def getTransaction(idTransaction):
     path = getPath()
@@ -58,6 +62,7 @@ def getTransaction(idTransaction):
     for deal in liste:
         tab += [deal.toJSON()]
     return tab
+
 
 @app.route('/persons/add')
 def addPersonne():  # /persons/add?firstName=<firstname>&lastName=<lastname> sans quote pour ajouter
@@ -76,6 +81,7 @@ def addPersonne():  # /persons/add?firstName=<firstname>&lastName=<lastname> san
         message += "lastName: Nom de la personne"
         return message
 
+
 @app.route('/transactions/date')
 def listerTransactionsParDate():
     path = getPath()
@@ -86,6 +92,7 @@ def listerTransactionsParDate():
         tab += [deal.toJSON()]
     return tab
 
+
 @app.route('/persons')
 def listerPersonnes():
     path = getPath()
@@ -95,6 +102,8 @@ def listerPersonnes():
     for person in liste:
         tab += [person.toJSON()]
     return tab
+
+
 @app.route('/persons/<idPerson>')
 def getPerson(idPerson):
     path = getPath()
@@ -104,6 +113,7 @@ def getPerson(idPerson):
     for person in liste:
         tab += [person.toJSON()]
     return tab
+
 
 @app.route('/connexion')
 def connexion():
@@ -126,13 +136,15 @@ def listerTransactionPour(idPerson):
     else:
         return "Id invalide"
 
-@app.route('/getSolde/<idPerson>') #Obtenir le solde d'une personne spécifique
+
+@app.route('/getSolde/<idPerson>')  # Obtenir le solde d'une personne spécifique
 def getSoldeOf(idPerson):
     listeID = {}
     listeID[int(idPerson)] = 0
     return calculSolde(listeID)
 
-@app.route('/getSolde') #Obtenir le solde de tout le monde
+
+@app.route('/getSolde')  # Obtenir le solde de tout le monde
 def getSoldes():
     path = getPath()
     db = DataBase(path)
@@ -142,7 +154,9 @@ def getSoldes():
     for person in listePersons:
         listeID[person.id] = 0
     return calculSolde(listeID)
-def calculSolde(listeID:dict): #Fonction générique pour calculer le solde
+
+
+def calculSolde(listeID: dict):  # Fonction générique pour calculer le solde
     path = getPath()
     db = DataBase(path)
     listeDeal = db.getDealList()
@@ -153,13 +167,15 @@ def calculSolde(listeID:dict): #Fonction générique pour calculer le solde
             elif deal.receiver == id:
                 listeID[id] += deal.amount
     return listeID
+
+
 @app.route("/verifyIntegrity")
 def verifyIntegrity():
     db = DataBase(getPath())
     deals = db.getDealList()
     wrong = []
     for deal in deals:
-        totalstr = str(deal.debtor)+str(deal.receiver)+str(deal.amount)+str(deal.date)
-        if(str(DataBase.fonctionHachage(totalstr.encode("utf-8")).hexdigest()) != deal.h):
+        totalstr = str(deal.debtor) + str(deal.receiver) + str(deal.amount) + str(deal.date)
+        if (str(DataBase.fonctionHachage(totalstr.encode("utf-8")).hexdigest()) != deal.h):
             wrong += [deal.id]
     return wrong
