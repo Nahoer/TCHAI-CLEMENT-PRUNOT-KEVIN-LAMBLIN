@@ -84,7 +84,8 @@ Disponible en version v1.
 Méthode qui permet de vérifier l'intégrité des données dans la base. Cette méthode nous renvoi la liste des transactions
 dont le hash ne correspond pas aux données  
 Cette méthode ne nécessite aucun paramètre.  
-Disponible en version v2.
+Disponible en version v2.  
+Améliorer en version v3 afin de calculer le hash en mode *blockchain*.
 
 ## Méthode POST
 
@@ -120,6 +121,13 @@ Pour la version 1, nous avons réalisé un script de test qui nommé *testv1.py*
 Pour la version 2, nous avons réalisé un script de test qui nommé *testv2.py* qui appel le script de la première
 version.  
 Ensuite nous appelons l'attaque de la version 1 et verifions l'intégrité. Nous remarquons que cette fois,
+l'erreur est détectée.
+
+### Version 2
+
+Pour la version 2, nous avons réalisé un script de test qui nommé *testv3.py* qui appel le script de la première
+version.  
+Ensuite nous appelons l'attaque de la version 2 et verifions l'intégrité. Nous remarquons que cette fois,
 l'erreur est détectée.
 
 ## Attaques
