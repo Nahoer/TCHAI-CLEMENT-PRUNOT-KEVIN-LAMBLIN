@@ -31,7 +31,7 @@ class DataBase:
             dealList += [DealModel(row[0], row[3], row[4], row[1], row[2], row[5])]
         return dealList
     def fonctionHachage(string:bytes):
-        return hashlib.md5(string)
+        return hashlib.sha224(string)
     def addPerson(self, last_name, first_name):
         try:
             cursor = self.connection.cursor()
