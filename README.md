@@ -111,7 +111,8 @@ Pour l'ensemble des versions, nous avons réalisé des attaques. La démarche de
 ### Version 1
 
 Pour la première version, nous devions réaliser une attaque qui modifie les données dans la base de données. Vous
-trouverez le script nommé *attackv1*.  
+trouverez le script nommé *attackv1.py
+*.  
 Ce dernier va afficher la liste des transactions, modifier le montant de l'une d'entre elle et afficher à nouveau les
 transactions.  
 Nous remarquerons alors que les données ont bien été modifiées.
