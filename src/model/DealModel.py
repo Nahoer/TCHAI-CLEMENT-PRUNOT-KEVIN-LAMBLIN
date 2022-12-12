@@ -19,4 +19,5 @@ class DealModel:
         JSON["idReceveur"] = self.receiver
         JSON["montant"] = self.amount
         JSON["date"] = self.date
+        JSON["hash"] = self.h
         return JSON
