@@ -72,7 +72,7 @@ def addTransaction():
             current_hash = fonctionHachage(totalstr.encode("utf-8"))
             verifieur = PKCS115_SigScheme(public_key)
             verifieur.verify(current_hash, signature)
-            db.addTransaction(idEnvoyeur, idReceveur, montant, date, current_hash)
+            db.addTransaction(idEnvoyeur, idReceveur, montant, date, current_hash.hexdigest())
             message = "transaction ajoutée"
         except Exception as exception:
             message = exception.__str__()
@@ -126,6 +126,7 @@ def addPersonne():  # /persons/add?firstName=<firstname>&lastName=<lastname> san
         public_key = keys.publickey().exportKey('PEM')
         #add to database
         db.addPerson(last_name, first_name, public_key.decode())
+        
         #---add keys to jsonfile /!\ only for dev environment---#
         list = db.getPersonList()
         personAdded = list[len(list)-1]
