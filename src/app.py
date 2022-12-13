@@ -6,7 +6,6 @@ from Crypto.Signature.pkcs1_15 import PKCS115_SigScheme
 from Crypto.Hash import BLAKE2b
 from Crypto.Signature.pkcs1_15 import PKCS115_SigScheme
 from asymetric_crypto import Asymetric_Crypto
-from database import DataBase
 import hashlib
 import datetime
 import json
@@ -69,6 +68,7 @@ def makeSignature():  # /!\ Only for dev environment /!\#
 def addTransaction():
     db = dbConnexion()
     if checkParams(request.args, ['idSender', 'idReceiver', 'amount', "signature"]):
+
         idEnvoyeur = int(request.args.get("idSender"))
         idReceveur = int(request.args.get("idReceiver"))
         montant = float(request.args.get("amount"))
@@ -103,6 +103,7 @@ def addTransaction():
 @app.route('/transactions')
 def listerTransactions():
     db = dbConnexion()
+
     liste = db.getDealList()
     tab = []
     for deal in liste:
@@ -111,6 +112,7 @@ def listerTransactions():
 
 @app.route('/transactions/<idTransaction>')
 def getTransaction(idTransaction):
+    path = getPath()
     db = DataBase(path)
     liste = db.getDeal(int(idTransaction))
     tab = []
@@ -188,6 +190,7 @@ def listerTransactionsParDate():
 @app.route('/persons')
 def listerPersonnes():
     db = dbConnexion()
+
     liste = db.getPersonList()
     tab = []
     for person in liste:
@@ -210,6 +213,7 @@ def connexion():
 @app.route('/transactions/person/<idPerson>')
 def listerTransactionPour(idPerson):
     db = dbConnexion()
+
     id = int(idPerson)
 
     if id >= 0:
@@ -237,6 +241,7 @@ def getSoldeOf(idPerson):
 @app.route('/getSolde')  # Obtenir le solde de tout le monde
 def getSoldes():
     db = dbConnexion()
+
     listeDeal = db.getDealList()
     listePersons = db.getPersonList()
     listeID = {}
