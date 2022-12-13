@@ -2,7 +2,7 @@ Create table Personne
 (
   id integer PRIMARY KEY,
   last_name varchar NOT NULL,
-  first_name varchar NOT NULL
+  first_name varchar NOT NULL,
   public_key varchar NOT NULL
 );
 
