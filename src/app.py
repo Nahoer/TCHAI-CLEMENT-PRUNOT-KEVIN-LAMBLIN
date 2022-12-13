@@ -109,6 +109,14 @@ def listerTransactions():
         tab += [deal.toJSON()]
     return tab
 
+@app.route('/transactions/<idTransaction>')
+def getTransaction(idTransaction):
+    db = DataBase(path)
+    liste = db.getDeal(int(idTransaction))
+    tab = []
+    for deal in liste:
+        tab += [deal.toJSON()]
+    return tab
 
 @app.route('/transactions/<idTransaction>')
 def getTransaction(idTransaction):
@@ -214,6 +222,11 @@ def listerTransactionPour(idPerson):
     else:
         return "Id invalide"
 
+@app.route('/getSolde/<idPerson>') #Obtenir le solde d'une personne spécifique
+def getSoldeOf(idPerson):
+    listeID = {}
+    listeID[int(idPerson)] = 0
+    return calculSolde(listeID)
 
 @app.route('/getSolde/<idPerson>')  # Obtenir le solde d'une personne spécifique
 def getSoldeOf(idPerson):
