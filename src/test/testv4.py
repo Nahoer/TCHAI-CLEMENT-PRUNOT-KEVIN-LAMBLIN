@@ -53,4 +53,6 @@ signer = PKCS115_SigScheme(private_key)
 signature = signer.sign(current_hash)
 signature = binascii.hexlify(signature).decode("utf-8")
 print(requests.get(base_url+"/transactions/add?idSender={id}&idReceiver={idOther}&amount={amount}&signature={signature}".format(id=id, signature=signature, amount=amount, idOther=idOther)).text)
-
+print()
+print("hash faux:")
+print(requests.get(base_url+"/verifyIntegrity").text)
