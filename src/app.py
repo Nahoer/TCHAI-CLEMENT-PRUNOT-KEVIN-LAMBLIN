@@ -53,6 +53,8 @@ def makeSignature():                                                            
         signer = PKCS115_SigScheme(private_key)
         signature = signer.sign(current_hash)
         return {"signature":binascii.hexlify(signature).decode("utf-8")}
+    else:
+        return "pas les bon arguments"
 
                                                                                      #--------------------------------#
 @app.route('/transactions/add')
