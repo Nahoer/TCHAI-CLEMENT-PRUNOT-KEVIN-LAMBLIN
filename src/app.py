@@ -108,29 +108,33 @@ def getTransaction(idTransaction):
 @app.route('/persons/add')
 def addPersonne():  # /persons/add?firstName=<firstname>&lastName=<lastname> sans quote pour ajouter
     db = dbConnexion()
+
     #Créations des clé publique et privée
     if checkParams(request.args, ['lastName', 'firstName']):
-        first_name = str(request.args.get("firstName"))
-        last_name = str(request.args.get("lastName"))
+        try:
+            first_name = str(request.args.get("firstName"))
+            last_name = str(request.args.get("lastName"))
 
-        #RSA keys
-        keys = RSA.generate(1024)
-        private_key = keys.exportKey('PEM')
-        public_key = keys.publickey().exportKey('PEM')
-        #add to database
-        db.addPerson(last_name, first_name, public_key.decode())
-        
-        #---add keys to jsonfile /!\ only for dev environment---#
-        list = db.getPersonList()
-        personAdded = list[len(list)-1]
-        with open(getConfig()["keys_path"], 'r') as file:
-            json_object = json.load(file)
-        keysDict = {"privateKey": private_key.decode(), "publicKey": public_key.decode()}
-        json_object[str(personAdded.id)] = keysDict
-        with open(getConfig()["keys_path"], 'w') as file:
-            json.dump(json_object, file)
-        #-------------------------------------------------------#
-        return keysDict
+            #RSA keys
+            keys = RSA.generate(1024)
+            private_key = keys.exportKey('PEM')
+            public_key = keys.publickey().exportKey('PEM')
+            #add to database
+            db.addPerson(last_name, first_name, public_key.decode())
+
+            #---add keys to jsonfile /!\ only for dev environment---#
+            list = db.getPersonList()
+            personAdded = list[len(list)-1]
+            with open(getConfig()["keys_path"], 'r') as file:
+                json_object = json.load(file)
+            keysDict = {"privateKey": private_key.decode(), "publicKey": public_key.decode()}
+            json_object[str(personAdded.id)] = keysDict
+            with open(getConfig()["keys_path"], 'w') as file:
+                json.dump(json_object, file)
+            #-------------------------------------------------------#
+            return keysDict
+        except Exception as exception:
+            return exception
     else:
         message = "Veuillez founir les données suivante :<br/>"
         message += "firstName: Prénom de la personne<br/>"
