@@ -4,12 +4,10 @@ import json
 
 app = Flask(__name__)
 
-
 def getPath():
     config = json.load(open("../utils/config.json"))
     database = json.load(open("../utils/databases.json"))
     return database[config["database"]]
-
 
 def checkParams(requestArgs, list: [str]):
     # Vérifie que tous les paramètres de requête passés en paramètre sont dans la liste d'argument de la requête
@@ -44,6 +42,16 @@ def listerTransactions():
     path = getPath()
     db = DataBase(path)
     liste = db.getDealList()
+    tab = []
+    for deal in liste:
+        tab += [deal.toJSON()]
+    return tab
+
+@app.route('/transactions/<idTransaction>')
+def getTransaction(idTransaction):
+    path = getPath()
+    db = DataBase(path)
+    liste = db.getDeal(int(idTransaction))
     tab = []
     for deal in liste:
         tab += [deal.toJSON()]
@@ -89,7 +97,6 @@ def listerTransactionsParDate():
         tab += [deal.toJSON()]
     return tab
 
-
 @app.route('/persons')
 def listerPersonnes():
     path = getPath()
@@ -100,7 +107,6 @@ def listerPersonnes():
         tab += [person.toJSON()]
     return tab
 
-
 @app.route('/persons/<idPerson>')
 def getPerson(idPerson):
     path = getPath()
@@ -110,7 +116,6 @@ def getPerson(idPerson):
     for person in liste:
         tab += [person.toJSON()]
     return tab
-
 
 @app.route('/connexion')
 def connexion():
@@ -152,15 +157,12 @@ def getSoldes():
         listeID[person.id] = 0
     return calculSolde(listeID)
 
-
 def calculSolde(listeID: dict):  # Fonction générique pour calculer le solde
     path = getPath()
 
     db = DataBase(path)
     listeDeal = db.getDealList()
     for id in listeID:
-        print(id)
-        print(type(id))
         for deal in listeDeal:
             if deal.debtor == id:
                 listeID[id] -= deal.amount
