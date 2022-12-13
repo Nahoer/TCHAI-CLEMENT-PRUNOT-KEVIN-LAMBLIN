@@ -10,8 +10,11 @@ class DealModel:
         self.amount = amount
         self.date = date
         self.h = h
+
     def __str__(self):
-        return str(self.id)+" "+str(self.debtor)+" "+str(self.receiver)+" "+str(self.amount)+" "+str(self.date)
+        return str(self.id) + " " + str(self.debtor) + " " + str(self.receiver) + " " + str(self.amount) + " " + str(
+            self.date)
+
     def toJSON(self):
         JSON = {}
         JSON["id"] = self.id

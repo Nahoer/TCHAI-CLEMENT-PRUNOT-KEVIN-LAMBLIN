@@ -12,13 +12,13 @@ import json
 
 app = Flask(__name__)
 
+
 def getPath():
     config = json.load(open("../utils/config.json"))
     config = {}
     config["keys_path"] = configfile["keys"]
     config["db_path"] = database[configfile["database"]]
     return config
-
 
 
 def checkParams(requestArgs, list: [str]):
@@ -60,7 +60,7 @@ def makeSignature():  # /!\ Only for dev environment /!\#
         current_hash = fonctionHachage(totalstr.encode("utf-8"))
         signer = PKCS115_SigScheme(private_key)
         signature = signer.sign(current_hash)
-        return {"signature":binascii.hexlify(signature).decode("utf-8")}
+        return {"signature": binascii.hexlify(signature).decode("utf-8")}
     else:
         return "pas les bon arguments"
 
@@ -201,6 +201,7 @@ def listerPersonnes():
         tab += [person.toJSON()]
     return tab
 
+
 @app.route('/persons/<idPerson>')
 def getPerson(idPerson):
     db = dbConnexion()
@@ -237,11 +238,13 @@ def getSoldeOf(idPerson):
     listeID[int(idPerson)] = 0
     return calculSolde(listeID)
 
+
 @app.route('/getSolde/<idPerson>')  # Obtenir le solde d'une personne spécifique
 def getSoldeOf(idPerson):
     listeID = {}
     listeID[int(idPerson)] = 0
     return calculSolde(listeID)
+
 
 @app.route('/getSolde')  # Obtenir le solde de tout le monde
 def getSoldes():
@@ -253,6 +256,7 @@ def getSoldes():
     for person in listePersons:
         listeID[person.id] = 0
     return calculSolde(listeID)
+
 
 def calculSolde(listeID: dict):  # Fonction générique pour calculer le solde
     path = getPath()

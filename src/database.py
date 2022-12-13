@@ -13,7 +13,7 @@ class DataBase:
         except sqlite3.Error as error:
             print("Failed to connect to data base", error)
 
-    def getPerson(self, id:int):
+    def getPerson(self, id: int):
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM Personne WHERE id=?", [id])
         rows = cursor.fetchall()
@@ -21,9 +21,10 @@ class DataBase:
             for row in rows:
                 person = PersonModel(row[0], row[1], row[2], row[3])
             return person
-        else:return False
+        else:
+            return False
 
-    def getDeal(self, id:int):
+    def getDeal(self, id: int):
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM Transactions where id=?", [id])
         rows = cursor.fetchall()
@@ -31,9 +32,10 @@ class DataBase:
         for row in rows:
             dealList += [DealModel(row[0], row[3], row[4], row[1], row[2], row[5])]
         return dealList
-        
-    def fonctionHachage(string:bytes):
+
+    def fonctionHachage(string: bytes):
         return hashlib.sha224(string)
+
     def addPerson(self, last_name, first_name):
         try:
             cursor = self.connection.cursor()
@@ -41,7 +43,7 @@ class DataBase:
                                               (last_name, first_name, public_key) 
                                                VALUES
                                               (?,?,?)"""
-            cursor.execute(sqlite_insert_query, [last_name, first_name, public_key] )
+            cursor.execute(sqlite_insert_query, [last_name, first_name, public_key])
             self.connection.commit()
             print("Record inserted successfully into SqliteDb_developers table ", cursor.rowcount)
             cursor.close()
@@ -58,34 +60,32 @@ class DataBase:
 
         return personList
 
-    def addTransaction(self, id_envoyeur: int, id_receveur: int, montant: float, date:datetime, hash:str):
+    def addTransaction(self, id_envoyeur: int, id_receveur: int, montant: float, date: datetime, hash: str):
         try:
             cursor = self.connection.cursor()
             date = datetime.date.today()
-            totalstr = str(id_envoyeur)+str(id_receveur)+str(montant)+str(date)
+            totalstr = str(id_envoyeur) + str(id_receveur) + str(montant) + str(date)
             dealList = self.getDealList()
-            if len(dealList)!=0:
-                totalstr += dealList[len(dealList)-1].h
+            if len(dealList) != 0:
+                totalstr += dealList[len(dealList) - 1].h
             h = DataBase.fonctionHachage(totalstr.encode("utf-8")).hexdigest()
             sqlite_insert_query = """INSERT INTO Transactions
                                               (id_envoyeur, id_receveur, montant, date, hash) 
                                                VALUES
                                               ('{idEnvoyeur}','{idReceveur}','{montant}', '{date}', '{h}')
                                               """.format(
-                                                         idEnvoyeur=id_envoyeur,
-                                                         idReceveur=id_receveur,
-                                                         montant=montant,
-                                                         date=date,
-                                                         h=h
-                                                         )
+                idEnvoyeur=id_envoyeur,
+                idReceveur=id_receveur,
+                montant=montant,
+                date=date,
+                h=h
+            )
             count = cursor.execute(sqlite_insert_query)
             self.connection.commit()
             print("Record inserted successfully into SqliteDb_developers table ", cursor.rowcount)
             cursor.close()
         except sqlite3.Error as error:
             print("Erreur lors de l'insertion de la transaction: ", error)
-
-
 
     def getDealList(self) -> List[DealModel]:
         cursor = self.connection.cursor()

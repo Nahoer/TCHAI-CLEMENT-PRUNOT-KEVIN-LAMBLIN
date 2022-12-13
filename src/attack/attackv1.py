@@ -19,7 +19,6 @@ class DataBase:
         self.connection.commit()
 
 
-
 db = DataBase(path)
 
 # Show the list of deals ordered by date
