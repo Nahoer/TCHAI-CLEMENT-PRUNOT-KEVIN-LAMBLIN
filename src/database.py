@@ -55,6 +55,7 @@ class DataBase:
         personList = []
         for row in rows:
             personList += [PersonModel(row[0], row[1], row[2], row[3])]
+
         return personList
 
     def addTransaction(self, id_envoyeur: int, id_receveur: int, montant: float, date:datetime, hash:str):
