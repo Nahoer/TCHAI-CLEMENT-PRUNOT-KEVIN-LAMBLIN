@@ -41,14 +41,14 @@ def makeSignature():                                                            
         montant = float(request.args.get("amount"))
         with open(getConfig()["keys_path"], 'r') as file:
             json_object = json.load(file)
-        public_key = RSA.import_key(json_object[idEnvoyeur]["publicKey"])
         private_key = RSA.import_key(json_object[idEnvoyeur]["privateKey"])
         date = datetime.date.today()
         deal_list = db.getDealList()
         last_hash=""
+        totalstr = str(idEnvoyeur) + str(idReceveur) + str(montant) + str(date)
         if (len(deal_list)>0):
             last_hash = deal_list[len(deal_list) - 1].h
-        totalstr = str(idEnvoyeur) + str(idReceveur) + str(montant) + str(date) + str(last_hash)
+            totalstr += str(last_hash)
         current_hash = fonctionHachage(totalstr.encode("utf-8"))
         signer = PKCS115_SigScheme(private_key)
         signature = signer.sign(current_hash)
@@ -70,9 +70,10 @@ def addTransaction():
             date = datetime.date.today()
             deal_list = db.getDealList()
             last_hash = ""
+            totalstr = str(idEnvoyeur) + str(idReceveur) + str(montant) + str(date)
             if (len(deal_list) > 0):
                 last_hash = deal_list[len(deal_list) - 1].h
-            totalstr = str(idEnvoyeur) + str(idReceveur) + str(montant) + str(date) + str(last_hash)
+                totalstr+=str(last_hash)
             current_hash = fonctionHachage(totalstr.encode("utf-8"))
             verifieur = PKCS115_SigScheme(public_key)
             verifieur.verify(current_hash, signature)
