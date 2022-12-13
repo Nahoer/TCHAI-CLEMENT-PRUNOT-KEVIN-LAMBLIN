@@ -55,4 +55,6 @@ signature = binascii.hexlify(signature).decode("utf-8")
 print()
 print("Tentative de finalement donner de l'argent à Macron:")
 print(requests.get(base_url+"/transactions/add?idSender={id}&idReceiver={idOther}&amount={amount}&signature={signature}".format(id=id, signature=signature, amount=amount, idOther=idOther)).text)
-
+print()
+print("hash faux:")
+print(requests.get(base_url+"/verifyIntegrity").text)
