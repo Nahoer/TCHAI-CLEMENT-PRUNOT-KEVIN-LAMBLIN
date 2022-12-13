@@ -155,9 +155,12 @@ def getSoldes():
 
 def calculSolde(listeID: dict):  # Fonction générique pour calculer le solde
     path = getPath()
+
     db = DataBase(path)
     listeDeal = db.getDealList()
     for id in listeID:
+        print(id)
+        print(type(id))
         for deal in listeDeal:
             if deal.debtor == id:
                 listeID[id] -= deal.amount
