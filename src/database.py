@@ -17,10 +17,11 @@ class DataBase:
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM Personne WHERE id={id}".format(id=id))
         rows = cursor.fetchall()
-        personList = []
-        for row in rows:
-            personList += [PersonModel(row[0], row[1], row[2])]
-        return personList
+        if len(rows) != 0:
+            for row in rows:
+                person = PersonModel(row[0], row[1], row[2], row[3])
+            return person
+        else:return False
 
     def getDeal(self, id:int):
         cursor = self.connection.cursor()
@@ -30,15 +31,18 @@ class DataBase:
         for row in rows:
             dealList += [DealModel(row[0], row[3], row[4], row[1], row[2], row[5])]
         return dealList
+        
     def fonctionHachage(string:bytes):
         return hashlib.sha224(string)
     def addPerson(self, last_name, first_name):
         try:
             cursor = self.connection.cursor()
             sqlite_insert_query = """INSERT INTO Personne
-                                              (last_name, first_name) 
+                                              (last_name, first_name, public_key) 
                                                VALUES
-                                              ('{}','{}')""".format(last_name, first_name)
+                                              ('{lastName}','{firstName}','{publicKey}')""".format(lastName=last_name,
+                                                                                                   firstName=first_name,
+                                                                                                   publicKey=public_key)
             cursor.execute(sqlite_insert_query, )
             self.connection.commit()
             print("Record inserted successfully into SqliteDb_developers table ", cursor.rowcount)
@@ -52,10 +56,10 @@ class DataBase:
         rows = cursor.fetchall()
         personList = []
         for row in rows:
-            personList += [PersonModel(row[0], row[1], row[2])]
+            personList += [PersonModel(row[0], row[1], row[2], row[3])]
         return personList
 
-    def addTransaction(self, id_envoyeur: int, id_receveur: int, montant: float):
+    def addTransaction(self, id_envoyeur: int, id_receveur: int, montant: float, date:datetime, hash:str):
         try:
             cursor = self.connection.cursor()
             date = datetime.date.today()
