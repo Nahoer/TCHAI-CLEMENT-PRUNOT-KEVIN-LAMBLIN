@@ -39,18 +39,18 @@ print(requests.get(base_url+"/transactions/add?idSender={idOther}&idReceiver={id
 print(requests.get(base_url+"/transactions/add?idSender={idOther}&idReceiver={id}&amount={amount}&signature=013123123123123123123123123123".format(id=id, idOther=idOther, amount=amount)).text)
 idEnvoyeur = id
 idReceveur = idOther
-montant = amount
+amount = float(amount)
 private_key = RSA.import_key(keys["privateKey"])
 date = datetime.date.today()
 deal_list = requests.get(base_url+"/transactions").json()
 last_hash=""
 if (len(deal_list)>0):
     last_hash = deal_list[len(deal_list) - 1]["hash"]
-totalstr = str(idEnvoyeur) + str(idReceveur) + str(montant) + str(date) + str(last_hash)
+totalstr = str(idEnvoyeur) + str(idReceveur) + str(amount) + str(date) + str(last_hash)
 current_hash = BLAKE2b.new()
 current_hash.update(totalstr.encode("utf-8"))
 signer = PKCS115_SigScheme(private_key)
 signature = signer.sign(current_hash)
 signature = binascii.hexlify(signature).decode("utf-8")
-print(requests.get(base_url+"/transactions/add?idSender={idOther}&idReceiver={id}&amount={amount}&signature={signature}".format(id=id, signature=signature, amount=amount, idOther=idOther)).text)
+print(requests.get(base_url+"/transactions/add?idSender={id}&idReceiver={idOther}&amount={amount}&signature={signature}".format(id=id, signature=signature, amount=amount, idOther=idOther)).text)
 
