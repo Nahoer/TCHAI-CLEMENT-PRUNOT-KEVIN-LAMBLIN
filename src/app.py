@@ -12,6 +12,8 @@ import datetime
 import json
 
 app = Flask(__name__)
+
+
 # Variable contenant le chemin à la base de données
 def getConfig():
     configfile = json.load(open("../utils/config.json"))
@@ -20,6 +22,8 @@ def getConfig():
     config["keys_path"] = configfile["keys"]
     config["db_path"] = database[configfile["database"]]
     return config
+
+
 def checkParams(requestArgs, list: [str]):
     # Vérifie que tous les paramètres de requête passés en paramètre sont dans la liste d'argument de la requête
     ok = True
@@ -27,14 +31,20 @@ def checkParams(requestArgs, list: [str]):
         if not (param in requestArgs):
             ok = False
     return ok
+
+
 def dbConnexion():
     return DataBase(getConfig()["db_path"])
-def fonctionHachage(string:bytes):
+
+
+def fonctionHachage(string: bytes):
     h = BLAKE2b.new()
     h.update(string)
     return h
+
+
 @app.route('/dev/makeSignature')
-def makeSignature():                                                                 #/!\ Only for dev environment /!\#
+def makeSignature():  # /!\ Only for dev environment /!\#
     if checkParams(request.args, ['idSender', 'idReceiver', 'amount']):
         db = dbConnexion()
         idEnvoyeur = request.args.get("idSender")
@@ -45,9 +55,9 @@ def makeSignature():                                                            
         private_key = RSA.import_key(json_object[idEnvoyeur]["privateKey"])
         date = datetime.date.today()
         deal_list = db.getDealList()
-        last_hash=""
+        last_hash = ""
         totalstr = str(idEnvoyeur) + str(idReceveur) + str(montant) + str(date)
-        if (len(deal_list)>0):
+        if (len(deal_list) > 0):
             last_hash = deal_list[len(deal_list) - 1].h
             totalstr += str(last_hash)
         current_hash = fonctionHachage(totalstr.encode("utf-8"))
@@ -57,7 +67,7 @@ def makeSignature():                                                            
     else:
         return "pas les bon arguments"
 
-                                                                                     #--------------------------------#
+
 @app.route('/transactions/add')
 def addTransaction():
     db = dbConnexion()
@@ -76,7 +86,7 @@ def addTransaction():
             totalstr = str(idEnvoyeur) + str(idReceveur) + str(montant) + str(date)
             if (len(deal_list) > 0):
                 last_hash = deal_list[len(deal_list) - 1].h
-                totalstr+=str(last_hash)
+                totalstr += str(last_hash)
             current_hash = fonctionHachage(totalstr.encode("utf-8"))
             verifieur = PKCS115_SigScheme(public_key)
             verifieur.verify(current_hash, signature)
@@ -91,6 +101,8 @@ def addTransaction():
         message += "idReceveur: personne qui reçoit l'argent de la transaction<br/>"
         message += "montant: montant de la transaction<br/>"
         return message
+
+
 @app.route('/transactions')
 def listerTransactions():
     db = dbConnexion()
@@ -99,6 +111,8 @@ def listerTransactions():
     for deal in liste:
         tab += [deal.toJSON()]
     return tab
+
+
 @app.route('/transactions/<idTransaction>')
 def getTransaction(idTransaction):
     db = dbConnexion()
@@ -107,33 +121,35 @@ def getTransaction(idTransaction):
     for deal in liste:
         tab += [deal.toJSON()]
     return tab
+
+
 @app.route('/persons/add')
 def addPersonne():  # /persons/add?firstName=<firstname>&lastName=<lastname> sans quote pour ajouter
     db = dbConnexion()
 
-    #Créations des clé publique et privée
+    # Créations des clé publique et privée
     if checkParams(request.args, ['lastName', 'firstName']):
         try:
             first_name = str(request.args.get("firstName"))
             last_name = str(request.args.get("lastName"))
 
-            #RSA keys
+            # RSA keys
             keys = RSA.generate(1024)
             private_key = keys.exportKey('PEM')
             public_key = keys.publickey().exportKey('PEM')
-            #add to database
+            # add to database
             db.addPerson(last_name, first_name, public_key.decode())
 
-            #---add keys to jsonfile /!\ only for dev environment---#
+            # ---add keys to jsonfile /!\ only for dev environment---#
             list = db.getPersonList()
-            personAdded = list[len(list)-1]
+            personAdded = list[len(list) - 1]
             with open(getConfig()["keys_path"], 'r') as file:
                 json_object = json.load(file)
             keysDict = {"privateKey": private_key.decode(), "publicKey": public_key.decode()}
             json_object[str(personAdded.id)] = keysDict
             with open(getConfig()["keys_path"], 'w') as file:
                 json.dump(json_object, file)
-            #-------------------------------------------------------#
+            # -------------------------------------------------------#
             return keysDict
         except Exception as exception:
             return exception
@@ -142,6 +158,8 @@ def addPersonne():  # /persons/add?firstName=<firstname>&lastName=<lastname> san
         message += "firstName: Prénom de la personne<br/>"
         message += "lastName: Nom de la personne"
         return message
+
+
 @app.route('/transactions/date')
 def listerTransactionsParDate():
     db = dbConnexion()
@@ -150,6 +168,8 @@ def listerTransactionsParDate():
     for deal in liste:
         tab += [deal.toJSON()]
     return tab
+
+
 @app.route('/persons')
 def listerPersonnes():
     db = dbConnexion()
@@ -158,15 +178,21 @@ def listerPersonnes():
     for person in liste:
         tab += [person.toJSON()]
     return tab
+
+
 @app.route('/persons/<idPerson>')
 def getPerson(idPerson):
     db = dbConnexion()
     person = db.getPerson(int(idPerson))
     tab = [person.toJSON()]
     return tab
+
+
 @app.route('/connexion')
 def connexion():
     return "Connexion OK"
+
+
 @app.route('/transactions/person/<idPerson>')
 def listerTransactionPour(idPerson):
     db = dbConnexion()
@@ -181,12 +207,16 @@ def listerTransactionPour(idPerson):
         return tab
     else:
         return "Id invalide"
-@app.route('/getSolde/<idPerson>') #Obtenir le solde d'une personne spécifique
+
+
+@app.route('/getSolde/<idPerson>')  # Obtenir le solde d'une personne spécifique
 def getSoldeOf(idPerson):
     listeID = {}
     listeID[int(idPerson)] = 0
     return calculSolde(listeID)
-@app.route('/getSolde') #Obtenir le solde de tout le monde
+
+
+@app.route('/getSolde')  # Obtenir le solde de tout le monde
 def getSoldes():
     db = dbConnexion()
     listeDeal = db.getDealList()
@@ -195,7 +225,9 @@ def getSoldes():
     for person in listePersons:
         listeID[person.id] = 0
     return calculSolde(listeID)
-def calculSolde(listeID:dict): #Fonction générique pour calculer le solde
+
+
+def calculSolde(listeID: dict):  # Fonction générique pour calculer le solde
     db = dbConnexion()
     listeDeal = db.getDealList()
     for id in listeID:
@@ -205,16 +237,19 @@ def calculSolde(listeID:dict): #Fonction générique pour calculer le solde
             elif deal.receiver == id:
                 listeID[id] += deal.amount
     return listeID
+
+
 @app.route("/verifyIntegrity")
 def verifyIntegrity():
     db = dbConnexion()
     deals = db.getDealList()
     wrong = []
     for i in range(len(deals)):
-        totalstr = str(deals[i].debtor)+str(deals[i].receiver)+str(deals[i].amount)+str(deals[i].date)
+        totalstr = str(deals[i].debtor) + str(deals[i].receiver) + str(deals[i].amount) + str(deals[i].date)
         if i > 0:
-            totalstr+=deals[i-1].h
+            totalstr += deals[i - 1].h
         hashAttendu = str(fonctionHachage(totalstr.encode("utf-8")).hexdigest())
+
         if hashAttendu != deals[i].h:
             wrong += [deals[i].id]
     return wrong
