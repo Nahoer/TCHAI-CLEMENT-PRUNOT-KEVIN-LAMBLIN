@@ -15,7 +15,7 @@ class DataBase:
 
     def getPerson(self, id:int):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM Personne WHERE id={id}".format(id=id))
+        cursor.execute("SELECT * FROM Personne WHERE id=?", [id])
         rows = cursor.fetchall()
         if len(rows) != 0:
             for row in rows:
@@ -25,7 +25,7 @@ class DataBase:
 
     def getDeal(self, id:int):
         cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM Transactions where id={id}".format(id=id))
+        cursor.execute("SELECT * FROM Transactions where id=?", [id])
         rows = cursor.fetchall()
         dealList = []
         for row in rows:
@@ -40,10 +40,8 @@ class DataBase:
             sqlite_insert_query = """INSERT INTO Personne
                                               (last_name, first_name, public_key) 
                                                VALUES
-                                              ('{lastName}','{firstName}','{publicKey}')""".format(lastName=last_name,
-                                                                                                   firstName=first_name,
-                                                                                                   publicKey=public_key)
-            cursor.execute(sqlite_insert_query, )
+                                              (?,?,?)"""
+            cursor.execute(sqlite_insert_query, [last_name, first_name, public_key] )
             self.connection.commit()
             print("Record inserted successfully into SqliteDb_developers table ", cursor.rowcount)
             cursor.close()
@@ -108,10 +106,8 @@ class DataBase:
 
     def getDealForUser(self, id: int) -> List[DealModel]:
         cursor = self.connection.cursor()
-        query = """SELECT * FROM Transactions WHERE '{}' = id_envoyeur OR '{}' = id_receveur ORDER BY date ASC""".format(
-            id,
-            id)
-        cursor.execute(query)
+        query = """SELECT * FROM Transactions WHERE ? = id_envoyeur OR ? = id_receveur ORDER BY date ASC"""
+        cursor.execute(query, [id, id])
         rows = cursor.fetchall()
         dealList = []
         for row in rows:
