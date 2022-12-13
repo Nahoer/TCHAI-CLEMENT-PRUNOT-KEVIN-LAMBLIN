@@ -17,6 +17,10 @@ Pour le choix de la fonction de hachage, nous avons choisi sha224. Cette fonctio
 SHA2, cette famille de fonction de hachage est très fiable, car elle a été développée par la NSA.  
 Ces fonctions sont à ce jour toujours considérées comme très fiable.
 
+A partir de la version 4, nous utilisons la fonction de hachage Blake2B afin d'ajouter une partie cryptographique à
+notre système.  
+Cette fonction de hachage est également plus rapide que SHA2 et rend donc notre système plus performant.
+
 # Requêtes de Tchaî
 
 Dans cette partie, nous allons détailler les différentes fonctionnalités de notre application et qu'elles sont les
@@ -123,12 +127,19 @@ version.
 Ensuite nous appelons l'attaque de la version 1 et verifions l'intégrité. Nous remarquons que cette fois,
 l'erreur est détectée.
 
-### Version 2
+### Version 3
 
-Pour la version 2, nous avons réalisé un script de test qui nommé *testv3.py* qui appel le script de la première
+Pour la version 3, nous avons réalisé un script de test qui nommé *testv3.py* qui appel le script de la première
 version.  
 Ensuite nous appelons l'attaque de la version 2 et verifions l'intégrité. Nous remarquons que cette fois,
 l'erreur est détectée.
+
+### Version 4
+
+Pour la version 4, nous avons réalisé un script de test qui nommé *testv4.py* qui appel le script des premières
+versions.  
+Ensuite nous appelons l'attaque de la version 3 et nous pouvons voir qu'il est impossible de faire une transaction à la
+place d'une personne tierce.
 
 ## Attaques
 
