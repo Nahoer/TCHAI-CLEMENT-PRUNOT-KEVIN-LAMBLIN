@@ -20,6 +20,7 @@ def getPath():
     return config
 
 
+
 def checkParams(requestArgs, list: [str]):
     # Vérifie que tous les paramètres de requête passés en paramètre sont dans la liste d'argument de la requête
     ok = True
@@ -110,6 +111,7 @@ def listerTransactions():
         tab += [deal.toJSON()]
     return tab
 
+
 @app.route('/transactions/<idTransaction>')
 def getTransaction(idTransaction):
     path = getPath()
@@ -119,6 +121,7 @@ def getTransaction(idTransaction):
     for deal in liste:
         tab += [deal.toJSON()]
     return tab
+
 
 @app.route('/transactions/<idTransaction>')
 def getTransaction(idTransaction):
@@ -177,6 +180,7 @@ def addPersonne():  # /persons/add?firstName=<firstname>&lastName=<lastname> san
         message += "lastName: Nom de la personne"
         return message
 
+
 @app.route('/transactions/date')
 def listerTransactionsParDate():
     db = dbConnexion()
@@ -226,7 +230,8 @@ def listerTransactionPour(idPerson):
     else:
         return "Id invalide"
 
-@app.route('/getSolde/<idPerson>') #Obtenir le solde d'une personne spécifique
+
+@app.route('/getSolde/<idPerson>')  # Obtenir le solde d'une personne spécifique
 def getSoldeOf(idPerson):
     listeID = {}
     listeID[int(idPerson)] = 0
